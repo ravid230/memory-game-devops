@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Memory Game</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; margin-top: 30px; }
+    .card {
+      width: 100px; height: 100px;
+      background: lightblue;
+      display: inline-block;
+      margin: 10px;
+      font-size: 40px;
+      line-height: 100px;
+      cursor: pointer;
+      border-radius: 10px;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Memory Game</h1>
+  <div id="board"></div>
+
+  <script>
+    const emojis = ['🍎', '🍌', '🍇', '🍓'];
+    let cards = [...emojis, ...emojis].sort(() => 0.5 - Math.random());
+    let selected = [];
+    let matched = [];
+
+    const board = document.getElementById('board');
+
+    cards.forEach((emoji, i) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.dataset.index = i;
+      card.onclick = () => {
+        if (selected.length < 2 && !matched.includes(i)) {
+          card.innerText = emoji;
+          selected.push({ i, emoji });
+          if (selected.length === 2) {
+            setTimeout(() => {
+              if (selected[0].emoji === selected[1].emoji) {
+                matched.push(selected[0].i, selected[1].i);
+              } else {
+                document.querySelectorAll('.card')[selected[0].i].innerText = '';
+                document.querySelectorAll('.card')[selected[1].i].innerText = '';
+              }
+              selected = [];
+            }, 1000);
+          }
+        }
+      };
+      board.appendChild(card);
+    });
+  </script>
+</body>
+</html>
